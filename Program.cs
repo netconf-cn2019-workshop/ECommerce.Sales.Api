@@ -25,13 +25,13 @@ namespace ECommerce.Sales.Api
 
             try
             {
-                Log.Information("Starting web host");
+                Log.Information("正在启动网站");
                 BuildWebHost(args).Run();
                 return;
             }
             catch (Exception ex)
             {
-                Log.Fatal(ex, "Host terminated unexpectedly");
+                Log.Fatal(ex, "网站意外停止");
                 return;
             }
             finally

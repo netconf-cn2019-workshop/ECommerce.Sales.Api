@@ -44,7 +44,7 @@ namespace ECommerce.Sales.Api.Controllers
         [HttpPost]
         public async void Post([FromBody]SubmitOrder submittedOrder)
         {
-            _logger.LogInformation($"A new order has been accepted for customer id '{submittedOrder.CustomerId}'.");
+            _logger.LogInformation($"收到了来自顾客 '{submittedOrder.CustomerId}' 的新订单");
 
             var command = new SubmitOrderCommand()
             {

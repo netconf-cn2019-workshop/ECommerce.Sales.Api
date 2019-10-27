@@ -26,13 +26,13 @@ namespace ECommerce.Sales.Api.Consumers
 
         public async Task Consume(ConsumeContext<SubmitOrderCommand> context)
         {
-            _logger.LogInformation($"Processing order for customer '{context.Message.CustomerId}'.");
+            _logger.LogInformation($"正在处理顾客 '{context.Message.CustomerId}' 的订单");
 
             var customer = await _dataService.GetCustomerAsync(context.Message.CustomerId);
             if (customer == null)
             {
                 // probably we want to log this
-                _logger.LogWarning($"Submitted invalid order for customer {context.Message.CustomerId}. No such customer");
+                _logger.LogWarning($"来自顾客 {context.Message.CustomerId} 的订单不正确，系统中不存在这个顾客");
 
                 return;
             }
@@ -55,14 +55,14 @@ namespace ECommerce.Sales.Api.Consumers
             if (total > 100)
             {
                 total = total * .9; // 10% off
-                _logger.LogInformation($"Applying bonus for customer {customer.CustomerId} for the total amount of {total}");
+                _logger.LogInformation($"为顾客 {customer.CustomerId} 的订单使用折扣后，总金额为 {total}");
             }
             order.Total = total;
 
             _salesContext.Orders.Add(order);
             _salesContext.SaveChanges();
 
-            _logger.LogInformation($"Created order {order.OrderId} for customer {customer.CustomerId} for the total amount of {order.Total}");
+            _logger.LogInformation($"已创建顾客 {customer.CustomerId} 的新订单，订单号为 {order.OrderId}，总金额 {order.Total}");
 
             await context.Publish(new OrderSubmittedEvent() {
                 CorrelationId = context.Message.CorrelationId,

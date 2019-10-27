@@ -30,7 +30,7 @@ namespace ECommerce.Sales.Api.Consumers
                 await _salesContext.SaveChangesAsync();
             }
 
-            _logger.LogInformation($"Order {context.Message.OrderId} for customer {context.Message.CustomerId} has been marked as shipped");
+            _logger.LogInformation($"由顾客 {context.Message.CustomerId} 提交的订单  {context.Message.OrderId} 被标记为 已发货");
         }
     }
 }
