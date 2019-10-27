@@ -1,4 +1,4 @@
-ARG PROJ_NAME
+ARG PROJ_NAME=ECommerce.Sales.Api
 
 FROM dotnetclub-docker.pkg.coding.net/dotnetconf/mcr/aspnet:2.2 AS base
 WORKDIR /app
@@ -22,6 +22,3 @@ ENV APP_NAME=${PROJ_NAME}
 WORKDIR /app
 COPY --from=publish /app .
 ENTRYPOINT ["/bin/bash", "-c", "dotnet ${APP_NAME}.dll"]
-
-
-# docker build . -t dotnetclub-docker.pkg.coding.net/dotnetconf/dev/$(basename $(pwd) | cut -d '.' -f 2,3 | awk '{print tolower($0)}' | sed 's/\./\-/g'):$(date +"%Y%m%d-%H%M%S") --build-arg PROJ_NAME=$(basename $(pwd))

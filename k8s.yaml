@@ -7,7 +7,6 @@ kind: Service
 apiVersion: v1
 metadata:
   name: sales-api
-  namespace: ecommerce
   labels:
     app: sales-api
     tier: backend
@@ -25,7 +24,9 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: sales-api
-  namespace: ecommerce
+  labels:
+    app: sales-api
+    tier: backend
 spec:
   selector:
     matchLabels:
@@ -41,7 +42,7 @@ spec:
       containers:
       - name: sales-api
         image: $$REGISTRY_SERVERsales-api:$$IMAGE_VERSION
-        imagePullPolicy: $$IMAGE_PULL_POLICY
+        imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 80
         env:
