@@ -3,12 +3,10 @@ using Autofac.Core;
 using Autofac.Extensions.DependencyInjection;
 using CorrelationId;
 using ECommerce.Common.Infrastructure.Messaging;
-using ECommerce.Sales.Api.Configuration;
 using ECommerce.Sales.Api.Model;
 using ECommerce.Sales.Api.Modules;
 using ECommerce.Sales.Api.Services;
 using MassTransit;
-using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
@@ -69,8 +67,6 @@ namespace ECommerce.Sales.Api
             services.AddHttpClient("DefaultClient")
                 .AddHttpMessageHandler<CorrelationIdDelegatingHandler>();
 
-            services.AddSingleton<ITelemetryInitializer, CustomTelemetryInitializer>();
-            services.AddApplicationInsightsTelemetry(Configuration["ApplicationInsights:InstrumentationKey"]);
             services.AddCorrelationId();
             services.AddHostedService<SalesService>();
 
