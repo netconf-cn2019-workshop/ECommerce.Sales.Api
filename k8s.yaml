@@ -1,0 +1,63 @@
+
+---
+#
+# Sales Microservice Deployment + Service
+#
+kind: Service
+apiVersion: v1
+metadata:
+  name: sales-api
+  namespace: ecommerce
+  labels:
+    app: sales-api
+    tier: backend
+spec:
+  selector:
+    app: sales-api
+    tier: backend
+  ports:
+  - name: sales-api
+    protocol: TCP
+    port: 8083
+    targetPort: 80
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sales-api
+  namespace: ecommerce
+spec:
+  selector:
+    matchLabels:
+      app: sales-api
+      tier: backend
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: sales-api
+        tier: backend
+    spec:
+      containers:
+      - name: sales-api
+        image: $$REGISTRY_SERVERsales-api:$$IMAGE_VERSION
+        imagePullPolicy: $$IMAGE_PULL_POLICY
+        ports:
+        - containerPort: 80
+        env:
+        - name: ASPNETCORE_ENVIRONMENT
+          value: "$$ENVIRONMENT_NAME"
+        - name: ASPNETCORE_ORCHESTRATOR
+          value: "k8s"
+        livenessProbe:
+          httpGet:
+            path: /health/live
+            port: 80
+          initialDelaySeconds: 3
+          periodSeconds: 3
+        readinessProbe:
+          httpGet:
+            path: /health/ready
+            port: 80
+          initialDelaySeconds: 3
+          periodSeconds: 3 
