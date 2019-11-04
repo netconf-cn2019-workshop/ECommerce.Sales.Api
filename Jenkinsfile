@@ -20,7 +20,7 @@ node("dotnet") {
 node("image-builder"){
     container('docker'){
         dir('dev-services'){
-            git branch: 'master', url: '$REPO_BASE/dev-services.git'
+            git branch: 'master', url: "$REPO_BASE/dev-services.git"
         }
         dir("$PROJECT_NAME"){
             git branch: 'master', url: "$REPO_BASE/${PROJECT_NAME}.git"
