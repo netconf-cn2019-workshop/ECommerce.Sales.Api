@@ -9,6 +9,7 @@ using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using ECommerce.Sales;
 
 namespace ECommerce.Sales.Api.Controllers
 {
@@ -34,9 +35,14 @@ namespace ECommerce.Sales.Api.Controllers
 
         // GET api/orders
         [HttpGet]
-        public IEnumerable<Order> Get()
+        public IEnumerable<Order> Get([FromQuery]Order query)
         {
-            var orders = _salesContext.Orders.Include(o => o.Items).ToList();
+            // 从header中获取 Customer Id
+            if (query.CustomerId == 0)
+                query.CustomerId = HttpContext.UserCustomerId();
+
+            var orders = _salesContext.Orders.Where(o => o.CustomerId == query.CustomerId);
+            orders = orders.Include(o => o.Items); 
             return orders;
         }
 
@@ -44,6 +50,10 @@ namespace ECommerce.Sales.Api.Controllers
         [HttpPost]
         public async void Post([FromBody]SubmitOrder submittedOrder)
         {
+            // 从header中获取 Customer Id
+            if (submittedOrder.CustomerId == 0)
+                submittedOrder.CustomerId = HttpContext.UserCustomerId();
+
             _logger.LogInformation($"收到了来自顾客 '{submittedOrder.CustomerId}' 的新订单");
 
             var command = new SubmitOrderCommand()
